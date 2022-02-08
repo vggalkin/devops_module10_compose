@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+      - ./www:/var/www
+  
+  php:
+    build: .
+    volumes:
+      - ./www:/var/www
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://nginx", "|", "grep", "works"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
